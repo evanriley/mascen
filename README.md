@@ -1,11 +1,17 @@
 # mascen
 
-A custom layout generator for the [River](https://github.com/riverwm/river) Wayland compositor, implemented in Zig.
+Mastered Centered layout generator for River.
+Think Master layout with the orientation setting equal to 'center' in hyprland.
+
+This is very much 'alpha' quality.
+If it works for you, wonderful!
+If it doesn't I will accept a pull request but support is extremely limited.
+
+However, I will most likely ignore feature request and will close those issues without warning.
 
 ## Requirements
 
 - Zig 0.15.2
-- Wayland scanner/protocols (if not bundled or handled by build.zig dependencies)
 
 ## Build
 
