@@ -173,14 +173,14 @@ fn layoutListener(layout: *river.LayoutV3, event: river.LayoutV3.Event, ctx: *Co
 }
 
 fn isLeftIndex(stack_count: u32, index: u32) bool {
-    const odd_stack = (stack_count % 2 != 0);
-    if (odd_stack) {
-        // For odd counts: even indices -> Left, odd -> Right
-        return (index % 2 == 0);
-    } else {
-        // For even counts: even indices -> Right, odd -> Left
-        return (index % 2 != 0);
-    }
+    // Anchor to the bottom (oldest) of the stack.
+    // This ensures that adding windows (at index 0) doesn't shift older windows.
+    // We calculate distance from the bottom (stack_count - 1).
+    // Distance 0 (Oldest) -> Left
+    // Distance 1 -> Right
+    // Distance 2 -> Left
+    const distance = (stack_count - 1) - index;
+    return (distance % 2 == 0);
 }
 
 fn handleDemand(ctx: *Context, demand: anytype) void {
