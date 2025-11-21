@@ -1,6 +1,6 @@
 # mascen
 
-Mastered Centered layout generator for River.
+Master Centered layout generator for River.
 Think Master layout with the orientation setting equal to 'center' in hyprland.
 
 ### In this layout
