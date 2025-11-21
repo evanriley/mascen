@@ -3,11 +3,31 @@
 Mastered Centered layout generator for River.
 Think Master layout with the orientation setting equal to 'center' in hyprland.
 
+### In this layout
+
+- The Master window (the last one in the list) takes the center.
+- The Stack windows alternate between the Right and Left columns.
+
+```text
++-------------+---------------------------+-------------+
+|             |                           |             |
+|   Stack 1   |                           |   Stack 0   |
+|             |                           |             |
++-------------+          Master           +-------------+
+|             |                           |             |
+|   Stack 3   |                           |   Stack 2   |
+|             |                           |             |
++-------------+---------------------------+-------------+
+```
+
+
 This is very much 'alpha' quality.
+
 If it works for you, wonderful!
+
 If it doesn't I will accept a pull request but support is extremely limited.
 
-However, I will most likely ignore feature request and will close those issues without warning.
+I will most likely ignore feature request and will close those issues without warning or repsonse.
 
 ## Requirements
 
@@ -39,11 +59,11 @@ sudo make install
 
 ## Usage
 
-Run `mascen` from your River configuration (e.g., `river.init`):
+Run `mascen` from your River configuration (e.g., `init`):
 
 ```sh
-riverctl layout mascen mascen
-mascen &
+mascen --master-width 0.5 --gap 20 --inner-gap 10 --smart-gaps true &
+riverctl default-layout mascen
 ```
 
 ### Configuration
