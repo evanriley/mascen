@@ -1,25 +1,8 @@
 # mascen
 
 Master Centered layout generator for River.
+
 Think Master layout with the orientation setting equal to 'center' in hyprland.
-
-### In this layout
-
-- The Master window (the last one in the list) takes the center.
-- The Stack windows alternate between the Right and Left columns.
-
-```text
-+-------------+---------------------------+-------------+
-|             |                           |             |
-|   Stack 1   |                           |   Stack 0   |
-|             |                           |             |
-+-------------+          Master           +-------------+
-|             |                           |             |
-|   Stack 3   |                           |   Stack 2   |
-|             |                           |             |
-+-------------+---------------------------+-------------+
-```
-
 
 This is very much 'alpha' quality.
 
