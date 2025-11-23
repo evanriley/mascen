@@ -21,6 +21,32 @@ pub fn main() !void {
     }
     const allocator = gpa.allocator();
 
+    const config = try parseArgs(allocator);
+
+    const display = try wl.Display.connect(null);
+    defer display.disconnect();
+
+    const registry = try display.getRegistry();
+    defer registry.destroy();
+
+    var app = App.init(allocator, config);
+    defer app.deinit();
+
+    registry.setListener(*App, App.registryListener, &app);
+
+    if (display.roundtrip() != .SUCCESS) return error.RoundtripFailed;
+
+    if (app.layout_manager == null) {
+        std.log.err("river_layout_manager_v3 not found", .{});
+        return error.LayoutManagerNotFound;
+    }
+
+    while (true) {
+        if (display.dispatch() != .SUCCESS) break;
+    }
+}
+
+fn parseArgs(allocator: std.mem.Allocator) !Config {
     var config = Config{};
 
     var args = try std.process.argsWithAllocator(allocator);
@@ -43,28 +69,7 @@ pub fn main() !void {
             if (args.next()) |val| config.inner_gap = try std.fmt.parseInt(i32, val, 10);
         }
     }
-
-    const display = try wl.Display.connect(null);
-    defer display.disconnect();
-
-    const registry = try display.getRegistry();
-    defer registry.destroy();
-
-    var app = App.init(allocator, config);
-    defer app.deinit();
-
-    registry.setListener(*App, App.registryListener, &app);
-
-    if (display.roundtrip() != .SUCCESS) return error.RoundtripFailed;
-
-    if (app.layout_manager == null) {
-        std.debug.print("Error: river_layout_manager_v3 not found\n", .{});
-        return;
-    }
-
-    while (true) {
-        if (display.dispatch() != .SUCCESS) break;
-    }
+    return config;
 }
 
 const App = struct {
