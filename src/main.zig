@@ -11,6 +11,8 @@ const Config = struct {
     min_stack_width: u32 = 100,
 };
 
+const LAYOUT_NAMESPACE = "mascen";
+
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer {
@@ -93,7 +95,7 @@ const App = struct {
                 const interface_name = std.mem.span(global.interface);
                 if (std.mem.eql(u8, interface_name, std.mem.span(river.LayoutManagerV3.interface.name))) {
                     app.layout_manager = registry.bind(global.name, river.LayoutManagerV3, 2) catch |err| {
-                        std.debug.print("Failed to bind layout manager: {}\n", .{err});
+                        std.log.err("Failed to bind layout manager: {}\n", .{err});
                         return;
                     };
                     // Initialize pending
@@ -121,8 +123,7 @@ const Context = struct {
 };
 
 fn initLayout(app: *App, manager: *river.LayoutManagerV3, output: *wl.Output) void {
-    // Namespace "mascen"
-    const layout = manager.getLayout(output, "mascen") catch return;
+    const layout = manager.getLayout(output, LAYOUT_NAMESPACE) catch return;
 
     const ctx = app.allocator.create(Context) catch return;
     ctx.* = .{ .layout = layout, .app = app };
@@ -143,7 +144,7 @@ fn layoutListener(layout: *river.LayoutV3, event: river.LayoutV3.Event, ctx: *Co
             handleDemand(ctx, demand);
         },
         .namespace_in_use => {
-            std.debug.print("Namespace 'mascen' already in use on this output.\n", .{});
+            std.log.err("Namespace '{s}' already in use on this output.\n", .{LAYOUT_NAMESPACE});
             layout.destroy();
         },
         .user_command => |cmd| {
@@ -196,7 +197,7 @@ fn handleDemand(ctx: *Context, demand: anytype) void {
     const serial = demand.serial;
 
     if (view_count == 0) {
-        layout.commit("mascen", serial);
+        layout.commit(LAYOUT_NAMESPACE, serial);
         return;
     }
 
@@ -287,5 +288,5 @@ fn handleDemand(ctx: *Context, demand: anytype) void {
         }
     }
 
-    layout.commit("mascen", serial);
+    layout.commit(LAYOUT_NAMESPACE, serial);
 }
